@@ -8,30 +8,58 @@ function setup() {
 }
 
 function draw() {
+	console.log(frameCount);
 	background(168, 209, 255);
+	noStroke();
+	if (frameCount <=300){
+	//snow on the ground
+	frameRate (40);
 	drawSnow (0,0);
 	drawSnow (150,10);
 	drawSnow (300,-10);
 	drawSnow (400,0);
 	drawSnow (500,15);
 	drawSnow (680,7);
+		
+	//show the penguin
 	penguin.display();
-	coordinate();
 	
+	//coordinate();
+	
+	//falling snowflake
 	let t = frameCount / 60;
-  for (let j = 0; j < random(2); j++) {
+  for (let j = 0; j < random(5); j++) {
     snowflakes.push(new snowflake());
   }
   for (let flake of snowflakes) {
     flake.update(t); 
     flake.display(); 
   }
-	if (mouseX >= 160 && mouseX <=240 && mouseY >=635 && mouseY <=765){
-	penguin.tremble(195,205,695,705);
+	
+	//tremble the penguin
+	penguin.tremble(198,202,698,702);
 	}
+else if (frameCount >300 && frameCount <= 800){
+	//falling snowflake
+	let t = frameCount / 60;
+  for (let j = 0; j < random(5); j++) {
+    snowflakes.push(new snowflake());
+  }
+  for (let flake of snowflakes) {
+    flake.update(t); 
+    flake.display(); 
+  }
+	penguin.display();
+	penguin.move();
+}
+else if (frameCount >800 && frameCount<=1200){
+	translate(400,600);
+	penguin.display();
+}
+	
 	
 }
-function coordinate(){
+/*function coordinate(){
 	stroke (255);
   strokeWeight (1);
   line (0, mouseY, width, mouseY);
@@ -43,12 +71,14 @@ function mousePressed(){
   print ("y is: ");
   print(mouseY);
 }
+*/
 function Penguin(){
 	this.x = 200;
 	this.y = 700;
 	this.dist = 10;
 	
 	this.display = function(){
+	push();
 	fill(0);
 	noStroke();
 	ellipse(this.x,this.y,80,130);
@@ -65,7 +95,7 @@ function Penguin(){
 	triangle(this.x-8,this.y-30,this.x+7,this.y-30,this.x,this.y-20);
 	ellipse(this.x-16,this.y+64,25,13);
 	ellipse(this.x+16,this.y+64,25,13);
-	
+	pop();
 		
 		}
 		
@@ -73,7 +103,11 @@ function Penguin(){
 			this.x = random(upX,downX);
 			this.y = random(upY,downY);
 	}
-	
+	this.move = function(){
+			this.x = random(frameCount*0.5,frameCount);
+			this.y = random(frameCount*0.5,frameCount);
+			
+	}
 }
 function drawSnow(snowX,snowY){
 	push();
@@ -84,6 +118,7 @@ function drawSnow(snowX,snowY){
 	pop();
 }
 
+//snowflake code from the example https://p5js.org/examples/simulate-snowflakes.html
 function snowflake() {
   this.posX = 0;
   this.posY = random(-50, 0);
