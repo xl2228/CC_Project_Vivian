@@ -1,6 +1,7 @@
 var penguin;
 var scene=0;
 let snowflakes = [];
+let values = [];
 
 function setup() {
 	createCanvas(800, 800);
@@ -8,8 +9,8 @@ function setup() {
 	penguin = new Penguin(200,700,10,0,0,0);
 	penguinMom = new Penguin(650,700,10,1,95,235);
 	
-	penguinA = new Penguin(200,700,10,0,0,0);
-	penguinAplus = new Penguin(650,700,10,1,95,235);		
+	penguinA = new Penguin(250,700,10,0,0,0);
+	penguinAplus = new Penguin(500,700,10,1,95,235);		
 }
 
 function draw() {
@@ -47,7 +48,7 @@ function draw() {
 		
 		
 		           //****SCENE2****
-	}else if (frameCount >300 && frameCount <= 700){
+	}else if (frameCount >300 && frameCount <= 550){
 	//snow on the ground
 	drawSnow (0,0);
 	drawSnow (150,10);
@@ -56,7 +57,7 @@ function draw() {
 	drawSnow (500,15);
 	drawSnow (680,7);
 	
-	//falling snowflake
+	//falling650 snowflake
 	let t = frameCount / 60;
   for (let j = 0; j < random(5); j++) {
     snowflakes.push(new snowflake());
@@ -67,23 +68,45 @@ function draw() {
   }
 	
 	//penguin moving toward her mom
-	let s= frameCount*0.8;
-	penguin.display(s);
-	
+		/*Here I wonder why the penguin starts to move
+		from a different location*/
+		
+	penguin.display();
+	let s= frameCount;
+	if (s<=550){
 	penguin.move(s);
-
+	}
 	
 	//tremble the penguin
 	penguin.tremble();
 	
 	//penguin mom
 	penguinMom.display();
+	//penguinMom.tremble();
              	//****SCENE3****
-}else if (frameCount >700 && frameCount<=1100){
+}else if (frameCount >500 && frameCount<=650){
+	penguinA.display();
+	penguinA.tremble();
+	penguinAplus.display();
+	penguinAplus.tremble();
+}else if(frameCount > 650 && frameCount <=750){
+	penguinA.display();
+	penguinA.tremble();
+	penguinAplus.display();
+	penguinAplus.tremble();
+	fireplace();
+
+	/*Here, i want to make the background color change gradually from blue to red.
+	how do I achieve that? do I make an array? Can I control it by frame count?*/
+	
+}else if (frameCount >750 && frameCount<=1000){
+	//background(
 	penguinA.display();
 	penguinAplus.display();
-}
+	fireplace();
 	
+}
+
 	
 }
 /*function coordinate(){
@@ -137,13 +160,14 @@ function Penguin(xPos, yPos,distance,r_,g_,b_){
 		
 	this.tremble = function(){	
 			this.x = random(this.x-2,this.x+2);
-			this.y = random(this.y-2,this.y+2);
+			this.y = 700;//random(this.y-2,this.y+2);
 	}
 	this.move = function(s){
 			this.x = s;
 			this.y = 700;
 			
 	}
+
 }
 function drawSnow(snowX,snowY){
 	push();
@@ -153,7 +177,12 @@ function drawSnow(snowX,snowY){
 	ellipse(90,780,200,110);
 	pop();
 }
-function Fireplace(){
+
+function fireplace(){
+	fill(235,71,36);
+	triangle(300,770,450,770,375,600);
+	fill (265,223,92);
+	triangle(350,755,400,755,375,650);
 	
 	
 	
