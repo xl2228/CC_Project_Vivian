@@ -1,8 +1,7 @@
 var penguin;
 var scene=0;
 let snowflakes = [];
-let values = [];
-
+let bubbles = [];
 function setup() {
 	createCanvas(800, 800);
 	background(168, 209, 255);
@@ -11,14 +10,14 @@ function setup() {
 	
 	penguinA = new Penguin(100,700,10,0,0,0);
 	penguinAplus = new Penguin(200,700,10,1,95,235);		
-	penguin.move(200,true)
+	penguin.move(200);
 }
 
 function draw() {
 	let from = color(168, 209, 255);
 	let to = color(255, 0, 0);
 	let interA = lerpColor(from, to,  map(frameCount,800,1200,0,1,true)   );
-	console.log(frameCount);
+	//console.log(frameCount);
 	                   //****SCENE1****
 	background(interA);
 	
@@ -73,15 +72,12 @@ function draw() {
   }
 		//penguin mom
 	penguinMom.display();
-	penguinMom.move (650,true);
+	penguinMom.move (650);
 	penguinMom.tremble();
 	
 	//penguin moving toward her mom
-		/*Here I wonder why the penguin starts to move
-		from a different location*   how do i move it with vectors? */
-		
 	penguin.display();
-	penguin.move(550,false);
+	penguin.move(550);
 	
 		
 	//tremble the penguin
@@ -114,8 +110,10 @@ function draw() {
 	penguinA.tremble();
 	penguinAplus.display();
 	penguinAplus.tremble();
-	penguinA.move(250,false);
-	penguinAplus.move(500,false);
+	penguinA.move(250);
+	penguinAplus.move(500);
+	
+
 	
 		              //****SCENE4****
 }else if(frameCount > 700 && frameCount <=800){
@@ -131,37 +129,49 @@ function draw() {
 	penguinA.tremble();
 	penguinAplus.display();
 	penguinAplus.tremble();
-	fireplace();
-	penguinA.move(250,false);
-	penguinAplus.move(490,false);
 
+	//fire
+	  for (let i = 0; i < 7; i++) {
+    let b = new Bubble();
+    bubbles.push(b);
+  }
+  for (let i = bubbles.length-1; i >= 0; i--) {
+    bubbles[i].update();
+    bubbles[i].show();
+		
+	penguinA.move(250,false);
+	penguinAplus.move(490);
+	}
 	
 }else if (frameCount >750 && frameCount<=1000){
 	penguinA.display();
 	penguinAplus.display();
-	penguinA.move(250,false);
-	penguinAplus.move(490,false);
-	fireplace();
+	penguinA.move(250);
+	penguinAplus.move(490);
+//fire
+	  for (let i = 0; i < 7; i++) {
+    let b = new Bubble();
+    bubbles.push(b);
+  }
+  for (let i = bubbles.length-1; i >= 0; i--) {
+    bubbles[i].update();
+    bubbles[i].show();
+   
+  }
 }else{
-	fireplace();
-}
+//fire
+	  for (let i = 0; i < 7; i++) {
+    let b = new Bubble();
+    bubbles.push(b);
+  }
+  for (let i = bubbles.length-1; i >= 0; i--) {
+    bubbles[i].update();
+    bubbles[i].show();
 
+}
+}
 	
 }
-/*function coordinate(){
-	stroke (255);
-  strokeWeight (1);
-  line (0, mouseY, width, mouseY);
-  line (mouseX, 0, mouseX, height);
-}
-function mousePressed(){
-	print("x is: ");
-  print(mouseX);
-  print ("y is: ");
-  print(mouseY);
-}
-*/
-
 //Penguin
 function Penguin(xPos, yPos,distance,r_,g_,b_){
 	this.x = xPos;
@@ -208,13 +218,9 @@ function Penguin(xPos, yPos,distance,r_,g_,b_){
 			this.x += random(-2,2);
 			this.y = 700;
 	}
-	this.move = function(s,moveDirectly=false){
-
-    this.targetX = s;
-		if (moveDirectly){
-			this.x = this.targetX;
-		}
-			
+	
+	this.move = function(s){
+   this.targetX = s;
 			
 	}
 
@@ -228,31 +234,57 @@ function drawSnow(snowX,snowY){
 	pop();
 }
 
-function fireplace(){
-	fill(235,71,36);
-	triangle(300,770,450,770,375,600);
-	fill (265,223,92);
-	triangle(350,755,400,755,375,650);
-	fill(77,48,2);
-	
+
+class Bubble {
+  
+  constructor() {
+    this.x = 350;
+    this.y = 755;
+    this.r = 30;
+    this.vx = random(-1, 1);
+    this.vy = random(-5, -1);
+    this.alpha = 255;
+  }
+  
+  update() {
+    this.x += this.vx;
+    this.y += this.vy;
+    this.alpha -= 7;
+    this.r -= 1;
+  }
+  
+  show() {
+    noStroke();
+    fill(244, 81, 44, this.alpha);
+    ellipse(this.x, this.y, this.r)
+  }
+  
+
 	
 	
 }
 
-//snowflake code from the example https://p5js.org/examples/simulate-snowflakes.html
+//upgraded snowflake code
 function snowflake() {
-  this.posX = 0;
+	//initiating coordinates 
+  this.posX = 0; 
   this.posY = random(-50, 0);
   this.initialangle = random(0, 2 * PI);
-  this.size = random(2, 5);
+  this.size = random(2, 5); //size of the snowflake
+	//radius of the snow spiral
+	
+	//uniformly spread out snowflakes in area.. square root (random(200*200)), always positive and 
   this.radius = sqrt(random(pow(width / 2, 2)));
-
   this.update = function(time) {
-    let w = 0.6; 
-    let angle = w * time + this.initialangle;
-    this.posX = width / 2 + this.radius * sin(angle);
-    this.posY += pow(this.size, 0.5);
+		//x position follows a circle
+    let w = 0.6; // angular speed
+    let angle = w * time + this.initialangle;//updated angle, change over time
+    this.posX = width / 2 + this.radius * sin(angle); //
+		
+		 // different size snowflakes fall at slightly different y speeds
+    this.posY += pow(this.size, 0.5); //square root
 
+		// delete snowflake if past end of screen
     if (this.posY > height) {
       let index = snowflakes.indexOf(this);
       snowflakes.splice(index, 1);
@@ -263,5 +295,5 @@ function snowflake() {
     ellipse(this.posX, this.posY, this.size);
   };
 	
-	
+
 }
