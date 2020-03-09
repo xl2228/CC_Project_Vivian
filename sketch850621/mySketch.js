@@ -133,7 +133,7 @@ function draw() {
 	//fire
 	  for (let i = 0; i < 7; i++) {
     let b = new Bubble();
-    bubbles.push(b);
+    bubbles.push(b); 
   }
   for (let i = bubbles.length-1; i >= 0; i--) {
     bubbles[i].update();
@@ -151,7 +151,7 @@ function draw() {
 //fire
 	  for (let i = 0; i < 7; i++) {
     let b = new Bubble();
-    bubbles.push(b);
+    bubbles.push(b); //push new items to the end of array
   }
   for (let i = bubbles.length-1; i >= 0; i--) {
     bubbles[i].update();
